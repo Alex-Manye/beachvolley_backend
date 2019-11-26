@@ -9,59 +9,69 @@ const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 require('dotenv').config();
 
-const authRouter = require('./routes/auth');
-const challengesRouter = require('./routes/challenges');
-const artsRouter = require('./routes/arts');
-const dashboardRouter = require('./routes/dashboard');
-
+// MONGOOSE CONNECTION
 mongoose
   .connect(process.env.MONGODB_URI, {
     keepAlive: true,
     useNewUrlParser: true,
-    reconnectTries: Number.MAX_VALUE
+    reconnectTries: Number.MAX_VALUE,
+    useUnifiedTopology: true
   })
-  .then(() => {
-    console.log(`Connected to database`);
-  })
-  .catch(error => {
-    console.error(error);
-  });
+  .then( () => console.log(`Connected to database`))
+  .catch( (err) => console.error(err));
 
+
+// EXPRESS SERVER INSTANCE
 const app = express();
 
-app.use(
-  cors({
-    credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN]
-  })
-);
-
+// SESSION MIDDLEWARE
 app.use(
   session({
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
-      ttl: 24 * 60 * 60 // 1 day
+      ttl: 24 * 60 * 60, // 1 day
     }),
     secret: process.env.SECRET_SESSION,
     resave: true,
     saveUninitialized: true,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000
-    }
-  })
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  }),
 );
 
+// CORS MIDDLEWARE SETUP
+app.use(
+  cors({
+    credentials: true,
+    origin: [process.env.PUBLIC_DOMAIN],
+  }),
+);
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+
+// MIDDLEWARE
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/auth', authRouter);
-// app.use('/challenges', challengesRouter);
-// app.use('/arts', artsRouter);
-// app.use('/dashboard', dashboardRouter);
 
+const auth = require('./routes/auth');
+const team = require('./routes/teams');
+const events = require('./routes/events')
+
+app.use('/auth', auth);
+app.use('/team', team);
+app.use('/events', events);
+
+// ERROR HANDLING
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404).json({ code: 'not found' });
@@ -77,5 +87,6 @@ app.use((err, req, res, next) => {
     res.status(statusError).json(err);
   }
 });
+
 
 module.exports = app;

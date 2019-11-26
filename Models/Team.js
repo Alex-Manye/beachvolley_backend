@@ -1,18 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
-const userSchema = new Schema({
+
+const teamSchema = new Schema({
     teamName: String,
+    email: String,
+    password: String,
     playerName1: String,
-    dniName1: String,
+    dniPlayer1: {type: String, unique: true},
     playerName2: String,
-    dniName2: String,
-    //tengo que ligarlo al evento....
-    timestamps: {
+    dniPlayer2: String,
+    events: [{type: ObjectId, ref:"Event"}],
+    },{
+      timestamps: {
         createdAt: 'created_at',
         updatedAt: 'updated_at'
-      }
+      },
     });
-
-const Team = mongoose.Model('Team',userSchema);
-module.export =  Team;
+    
+const Team = mongoose.model('Team',teamSchema);
+module.exports =  Team;
