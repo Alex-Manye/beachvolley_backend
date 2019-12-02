@@ -5,7 +5,12 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const Team = require("../Models/Team");
 
-const { isLoggedIn, isNotLoggedIn, validationLoggin} = require("../helpers/middlewares");
+const { 
+  isLoggedIn, 
+  isNotLoggedIn, 
+  validationLoggin,
+  validationSignUp
+} = require("../helpers/middlewares");
 
 //para conectar React con el backend: ¿?¿?
 
@@ -15,14 +20,14 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);   
 });
 
+
 //LOGIN
 router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next) => {
   const { teamName, email, password } = req.body;
-  console.log('asda')
+  //console.log('asda')
 
   try {
     const team = await Team.findOne({ teamName }) ;
-    console.log(team)
     if (!team) {
       next(createError(404));
     } 
@@ -44,24 +49,25 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next
 
 //SIGNUP
 
-router.post( "/signup", isNotLoggedIn(),
+router.post( "/signup", isNotLoggedIn(), validationSignUp(),
   async (req, res, next) => {
     const {teamName, email, password, playerName1, dniPlayer1, playerName2, dniPlayer2}= req.body;
-    console.log(req.body)
+    //console.log(req.body)
     try {
-   /*    const teamExists = await Team.findOne({teamName:teamName});
-      const dniExist = await Team.findOne({dniName1:dniName1});
-      if (teamExists || dniExist ) return next(createError(400)); */
- /*      else { */
+        const teamExists = await Team.findOne({teamName}, "teamName");
+        const emailExists = await User.findOne({ email }, "email")
+      if (teamExists || emailExists ) return next(createError(400)); 
+     else { 
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashPass = bcrypt.hashSync(password, salt);
         const newTeam = await Team.create({ teamName, email, password: hashPass, playerName1, dniPlayer1, playerName2, dniPlayer2 });
         req.session.currentUser = newTeam;
         res
-          .status(200) 
+          .status(200) //OK => Works
           .json(newTeam);
-     /*  } */
-    } catch (error) {
+    
+    } 
+  } catch (error) {
       next(error);
     }
   }
@@ -72,8 +78,7 @@ router.post('/logout', isLoggedIn(), (req, res, next) => {
   req.session.destroy();
   res
     .status(204) 
-    .send();
-  return; 
+    .json({ "message": "User logged out!" });
 });
 
 
@@ -84,3 +89,5 @@ router.get('/private', isLoggedIn(), (req, res, next) => {
 });
 
 module.exports = router;
+
+

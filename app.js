@@ -24,6 +24,16 @@ mongoose
 // EXPRESS SERVER INSTANCE
 const app = express();
 
+//// CORS MIDDLEWARE SETUP => Cross-origin resource sharing
+//to make AJAX requests to another domain
+//Pregunta T.A.=> Para conectar backend con frontend?
+app.use(
+  cors({
+    credentials: true,
+    origin: [process.env.PUBLIC_DOMAIN],
+  }),
+);
+
 // SESSION MIDDLEWARE
 app.use(
   session({
@@ -40,13 +50,7 @@ app.use(
   }),
 );
 
-// CORS MIDDLEWARE SETUP
-app.use(
-  cors({
-    credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN],
-  }),
-);
+/* Preguntar T.A.
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
@@ -54,6 +58,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
+*/
+
 
 // MIDDLEWARE
 app.use(logger('dev'));
@@ -66,10 +72,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const auth = require('./routes/auth');
 const team = require('./routes/teams');
 const events = require('./routes/events')
+const fileUpload = require('./routes/fileUpload')
 
 app.use('/auth', auth);
 app.use('/team', team);
 app.use('/events', events);
+app.use('/file', fileUpload);
 
 // ERROR HANDLING
 // catch 404 and forward to error handler
