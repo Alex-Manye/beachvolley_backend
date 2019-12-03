@@ -12,6 +12,7 @@ const teamSchema = new Schema({
     playerName2: String,
     dniPlayer2: String,
     events: [{type: ObjectId, ref:"Event"}],
+
     },{
       timestamps: {
         createdAt: 'created_at',

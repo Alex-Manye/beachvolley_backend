@@ -10,6 +10,7 @@ const eventSchema = new Schema({
     day: String, //?
     time: String, //?
     description: String,
+    
     },{
       timestamps: {
         createdAt: 'created_at',
