@@ -52,10 +52,11 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next
 router.post( "/signup", isNotLoggedIn(), validationSignUp(),
   async (req, res, next) => {
     const {teamName, email, password, playerName1, dniPlayer1, playerName2, dniPlayer2}= req.body;
+    console.log(req.body)
     //console.log(req.body)
     try {
         const teamExists = await Team.findOne({teamName}, "teamName");
-        const emailExists = await User.findOne({ email }, "email")
+        const emailExists = await Team.findOne({ email }, "email")
       if (teamExists || emailExists ) return next(createError(400)); 
      else { 
         const salt = bcrypt.genSaltSync(saltRounds);
@@ -81,7 +82,7 @@ router.post('/logout', isLoggedIn(), (req, res, next) => {
     .json({ "message": "User logged out!" });
 });
 
-
+//duplicada? Mirar
 router.get('/private', isLoggedIn(), (req, res, next) => {
   res
     .status(200)  // OK

@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Team = require('../Models/Team')
-const Event = require("../models/Event");
 const { isLoggedIn, isNotLoggedIn, validationLoggin} = require("../helpers/middlewares");
 
 
-/* GET Teams listing. */
+/* GET Teams listing. No lo necesito (J)*/ 
 router.get('/', isLoggedIn(), (req, res, next) =>{
   Team.findById()
   .then(team => {
@@ -16,7 +15,7 @@ router.get('/', isLoggedIn(), (req, res, next) =>{
 });
 
 
-/* GET one Team  */
+/* GET one Team  /No lo necesito , tengo auth/me (J)*/
 router.get('/:teamId', isLoggedIn(), (req, res, next) =>{
   const {teamId} = req.params;
   Team.findById(teamId)
@@ -27,7 +26,7 @@ router.get('/:teamId', isLoggedIn(), (req, res, next) =>{
   .catch(err => next(err))
 });
 
-/* PUT edit ONE Team */
+/* PUT edit ONE Team  /Para backlog (J)*/
 //al ser PUT no pongo: '/:teamId/edit'
 router.put('/:teamId', isLoggedIn(), (req, res, next) => {
   //console.log('hola')

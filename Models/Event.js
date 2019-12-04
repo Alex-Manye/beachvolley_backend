@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-
 const eventSchema = new Schema({
     eventName: String, 
-    teams: [{type: ObjectId, ref:"Team"}],
+    teams: [{type: ObjectId, ref:"Team"}], //los equipos inscritos
+    //owner: { type: ObjectId, ref: 'Team' }, //el creador del evento
+    //manager: { type: Boolean, default: false }, // Preguntar Javi
     location: String,
     day: String, //?
     time: String, //?
@@ -19,4 +20,4 @@ const eventSchema = new Schema({
     });
 
 const Event = mongoose.model('Event',eventSchema);
-module.exports =  Event;
+module.exports = Event;

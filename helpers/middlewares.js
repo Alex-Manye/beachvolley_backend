@@ -18,7 +18,7 @@ exports.validationLoggin = () => (req, res, next) => {
 }
 
 exports.validationSignUp = () => (req, res, next) => {
-  const { teamName, email, password, playerName1, playerName2, dniPlayer2 } = req.body;
+  const { teamName, email, password, playerName1, dniPlayer1, playerName2, dniPlayer2 } = req.body;
 
   if (!teamName || !email || !password || !playerName1 || !dniPlayer1 || !playerName2  || !dniPlayer2 ) next(createError(400));
   else next();

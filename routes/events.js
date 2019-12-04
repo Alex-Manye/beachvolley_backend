@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../Models/Event');
+const Team = require('../Models/Team');
 const {isLoggedIn, isNotLoggedIn, validationLoggin} = require("../helpers/middlewares");
 
 //GET all events
@@ -46,7 +47,7 @@ router.post('/add', isLoggedIn(), async (req, res, next) => {
 });
 //PUT event //edit event ///
 
-router.put('/:eventId/edit', isLoggedIn(), (req, res, next) => {
+router.put('/:eventId', isLoggedIn(), (req, res, next) => {
   const {eventId} =req.params;
   Event.findByIdAndUpdate(eventId,req.body,{ new:true})
     .then(editedEvent => { res.json({message:`${editedEvent} is updated successfully.`});
@@ -66,11 +67,29 @@ router.delete('/:eventId', isLoggedIn(), (req, res, next)=>{
   
     Event.findByIdAndRemove(eventId)
       .then(() => {
-        res.json({ message: `Project with ${req.params.id} is removed successfully.` });
+        res.json({ message: `Event with ${eventId} is removed successfully.` });
       })
       .catch( err => {
         res.json(err);
       })
   })
+
+//JOIN EVENT
+
+  router.put('/joinOneEvent/:eventId', isLoggedIn(), async (req, res, next) => {
+    const {eventId} =req.params;
+    const {_id} = req.session.currentUser
+    await Event.findByIdAndUpdate(eventId, {$push: {teams: _id}},{ new:true})
+    
+    const NewTeam = await Team.findByIdAndUpdate(_id,{$push: {events: eventId}},{ new:true})
+
+    console.log(NewTeam)
+    
+    res.json({"message": "You have successfully joined the event"})
+      
+  });
+
+
+
 
 module.exports = router;

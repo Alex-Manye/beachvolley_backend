@@ -5,7 +5,7 @@ const ObjectId = Schema.Types.ObjectId;
 
 const teamSchema = new Schema({
     teamName: String,
-    email: String,
+    email: {type: String, unique: true},
     password: String,
     playerName1: String,
     dniPlayer1: {type: String, unique: true},
