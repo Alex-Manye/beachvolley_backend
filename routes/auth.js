@@ -24,7 +24,7 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
 //LOGIN
 router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next) => {
   const { teamName, email, password } = req.body;
-  //console.log('asda')
+  console.log(req.body)
 
   try {
     const team = await Team.findOne({ teamName }) ;
@@ -39,6 +39,7 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next
       return 
     } 
     else {
+      console.log("here")
       next(createError(401));
     }
   } 
