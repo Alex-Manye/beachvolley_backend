@@ -91,6 +91,4 @@ router.delete('/:eventId', isLoggedIn(), (req, res, next)=>{
   });
 
 
-
-
 module.exports = router;
