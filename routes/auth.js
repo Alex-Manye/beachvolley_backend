@@ -12,7 +12,7 @@ const {
   validationSignUp
 } = require("../helpers/middlewares");
 
-//para conectar React con el backend: ¿?¿?
+//para conectar React con el backend:
 
 //Para recibir usuario y saber si estas logueado
 router.get('/me', isLoggedIn(), (req, res, next) => {
@@ -24,7 +24,7 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
 //LOGIN
 router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next) => {
   const { teamName, email, password } = req.body;
-  console.log(req.body)
+  //console.log(req.body)
 
   try {
     const team = await Team.findOne({ teamName }) ;
@@ -39,7 +39,7 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), async (req, res, next
       return 
     } 
     else {
-      console.log("here")
+      //console.log("here")
       next(createError(401));
     }
   } 

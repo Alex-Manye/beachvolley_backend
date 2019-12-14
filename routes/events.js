@@ -77,14 +77,14 @@ router.delete('/:eventId', isLoggedIn(), (req, res, next)=>{
 //JOIN EVENT
 
   router.put('/joinOneEvent/:eventId', isLoggedIn(), async (req, res, next) => {
-    console.log('in bakend');
+    //console.log('in bakend');
     const {eventId} =req.params;
     const {_id} = req.session.currentUser
     await Event.findByIdAndUpdate(eventId, {$push: {teams: _id}},{ new:true})
     
     const NewTeam = await Team.findByIdAndUpdate(_id,{$push: {events: eventId}},{ new:true})
 
-    console.log(NewTeam)
+    //console.log(NewTeam)
     
     res.json({"message": "You have successfully joined the event"})
       

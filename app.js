@@ -26,7 +26,6 @@ const app = express();
 
 //// CORS MIDDLEWARE SETUP => Cross-origin resource sharing
 //to make AJAX requests to another domain
-//Pregunta T.A.=> Para conectar backend con frontend?
 app.use(
   cors({
     credentials: true,

@@ -4,7 +4,7 @@ const Team = require('../Models/Team')
 const { isLoggedIn, isNotLoggedIn, validationLoggin} = require("../helpers/middlewares");
 
 
-/* GET Teams listing. No lo necesito (J)*/ 
+/* GET Teams listing. No lo necesito (Para Backlog)*/ 
 router.get('/', isLoggedIn(), (req, res, next) =>{
   Team.findById()
   .then(team => {
@@ -15,7 +15,7 @@ router.get('/', isLoggedIn(), (req, res, next) =>{
 });
 
 
-/* GET one Team  /No lo necesito , tengo auth/me (J)*/
+/* GET one Team  /No lo necesito , tengo auth/me (Para Backlog)*/
 router.get('/:teamId', isLoggedIn(), (req, res, next) =>{
   const {teamId} = req.params;
   Team.findById(teamId)
